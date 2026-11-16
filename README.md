@@ -15,7 +15,7 @@ GitHub Actions (02:30 IST daily)
                           8–65% subject area, clean outline, calm clock background
   crop ────────────────── apex at 22.5% of height, ≤1.15× upscale
   compose ─────────────── photo → year grid (front, lower half) → RGB JPEG
-  publish ─────────────── gh-pages → https://<user>.github.io/<repo>/wallpaper.jpg
+  publish ─────────────── gh-pages branch → https://raw.githubusercontent.com/<user>/<repo>/gh-pages/wallpaper.jpg
 iPhone Shortcut (06:00 daily)
   Get Contents of URL → Set Wallpaper Photo (Lock Screen)
 ```
@@ -40,13 +40,17 @@ its own render and checked pixel-for-pixel (`tests/compare_year.py`):
 
 ## One-time setup
 
-1. **Secrets** (repo → Settings → Secrets and variables → Actions):
-   - `BIRTH_DATE`: `YYYY-MM-DD` (only needed for the life/weeks view)
-   - `UNSPLASH_ACCESS_KEY`: from a free app at <https://unsplash.com/oauth/applications>
-   - `PEXELS_API_KEY` (optional): free at <https://www.pexels.com/api/>
-2. **Pages**: Settings → Pages → Deploy from branch → `gh-pages` / root.
-   The branch appears after the first run.
-3. **First run**: Actions → Daily wallpaper → Run workflow.
+Nothing is required: pushing to `main` starts the first run, and Wikimedia
+Commons needs no key. Optional extras (repo → Settings → Secrets and
+variables → Actions):
+
+- `UNSPLASH_ACCESS_KEY`: free app at <https://unsplash.com/oauth/applications>
+- `PEXELS_API_KEY`: free at <https://www.pexels.com/api/>
+- `BIRTH_DATE` (`YYYY-MM-DD`): only for `view = "life"`
+
+GitHub Pages is optional too. The phone reads the image straight from the
+`gh-pages` branch. If you turn Pages on (Settings → Pages → `gh-pages`), you
+also get a small credits page at `https://<user>.github.io/<repo>/`.
 
 ## iPhone setup
 
@@ -56,7 +60,7 @@ its own render and checked pixel-for-pixel (`tests/compare_year.py`):
    turns Depth Effect off.
 2. Shortcuts → Automation → **+** → Time of Day → 06:00, Daily →
    **Run Immediately**, Notify When Run off → New Blank Automation:
-   1. **Get Contents of URL**: `https://<user>.github.io/<repo>/wallpaper.jpg`
+   1. **Get Contents of URL**: `https://raw.githubusercontent.com/<user>/<repo>/gh-pages/wallpaper.jpg`
    2. **Set Wallpaper Photo**: Lock Screen. Tap the arrow and turn off
       **Show Preview** and **Crop to Subject**.
 3. Run it once by hand, then long-press the Lock Screen → Customize and

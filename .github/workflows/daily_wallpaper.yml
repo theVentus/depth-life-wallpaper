@@ -5,6 +5,9 @@ on:
     # 21:00 UTC = 02:30 IST. GitHub may start scheduled runs late, so this
     # leaves hours of slack before the iPhone automation fetches at 06:00.
     - cron: "0 21 * * *"
+  push:
+    branches: [main]
+    paths: ["src/**", "config.toml", "inbox/**", ".github/workflows/**"]
   workflow_dispatch:
     inputs:
       grid_only:
@@ -58,7 +61,7 @@ jobs:
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           PYTHONPATH: src
         run: |
-          python -m wallpaper.main --site site ${{ inputs.grid_only && '--grid-only' || '' }}
+          python -m wallpaper.main --site site ${{ github.event.inputs.grid_only == 'true' && '--grid-only' || '' }}
 
       - name: Save photo history (also keeps the schedule alive)
         run: |
