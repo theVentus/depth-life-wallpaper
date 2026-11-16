@@ -16,8 +16,8 @@ shadow = true              # soft shadow so white dots read over snow / bright s
 show_caption = true
 
 [selection]
-max_candidates = 90      # photos segmented per run (each ~10-20 s on Actions CPU)
-time_budget_min = 35     # stop searching after this long; the pool is topped up from yesterday
+max_candidates = 300     # photos segmented per run (each ~10-20 s on Actions CPU)
+time_budget_min = 40     # stop searching after this long; the pool is topped up from yesterday
 max_upscale = 1.15       # never enlarge the source more than this
 apex_target = 0.225      # subject top lands here (fraction of height)
 min_clock_cover = 0.10   # subject must cover at least this much of the numerals' height...
@@ -78,10 +78,10 @@ pages = 1
 queries_per_run = 6
 
 [sources.wikimedia]
-categories_per_run = 3
+categories_per_run = 6
 
 [sources.nasa]
-queries_per_run = 4
+queries_per_run = 10
 
 [sources.reddit]
 # Dormant unless REDDIT_CLIENT_ID/SECRET are approved keys.

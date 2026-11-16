@@ -195,8 +195,12 @@ def wikimedia(categories: list[str], kind: str, cfg: dict, min_h: int, min_w: in
             if not _big_enough(w, h, min_h, min_w) or not _clean(text, kind):
                 continue
             artist = re.sub("<[^>]+>", "", meta.get("Artist", {}).get("value", "")).strip()
-            url, tw, th = ii.get("thumburl", ii["url"]), ii.get("thumbwidth", w), ii.get("thumbheight", h)
-            if th < min_h:  # standard thumb too short: fall back to the original
+            # Commons serves thumbnails at most 3840 px wide, whatever the API
+            # reports; wide panoramas would arrive too short, so use originals.
+            tw = min(ii.get("thumbwidth", w), 3840)
+            th = round(h * tw / w)
+            url = ii.get("thumburl", ii["url"])
+            if th < min_h:
                 url, tw, th = ii["url"], w, h
             out.append(Candidate(
                 key=f"wikimedia:{p['pageid']}", source=f"wikimedia/{cat}", kind=kind, image_url=url,
