@@ -529,5 +529,867 @@
   "key": "wikimedia:45765646",
   "date": "2026-11-17",
   "used": true
+ },
+ {
+  "key": "wikimedia:28889862",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:188333089",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "nasa:as12-48-7034",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:92010880",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:GSFC_20171208_Archive_e001588",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "wikimedia:6113476",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "nasa:PIA21036",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "wikimedia:117408216",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:KSC-00pp1803",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "wikimedia:176337008",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:49065289",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "crop would run off the bottom"
+ },
+ {
+  "key": "nasa:SSC-20110203-S00095H",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "wikimedia:40090120",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:PIA06736",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "crop would run off the bottom"
+ },
+ {
+  "key": "wikimedia:71694177",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:iss073e0818308",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:89664209",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "subject too small (7%)"
+ },
+ {
+  "key": "nasa:GRC-2019-C-05718",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "wikimedia:110962520",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "crop would run off the bottom"
+ },
+ {
+  "key": "nasa:KSC-20250404-PH-KLS01_0026",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "wikimedia:35190885",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:PIA17948",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "wikimedia:106773738",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "crop would run off the bottom"
+ },
+ {
+  "key": "nasa:Artemis II at the pad sunset 01282026_14",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:109541262",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:PIA07085",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "wikimedia:2987308",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:KSC-2010-4451",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "wikimedia:99723610",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:129045078",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:iss059e019924",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "wikimedia:64790035",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:iss071e384199",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "wikimedia:170162699",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:PIA25038",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "wikimedia:11306541",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "nasa:PIA03695",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:40489869",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:GRC-2019-C-05901",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "wikimedia:48795989",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "wikimedia:80907353",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "nasa:PIA22962",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "wikimedia:57765206",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:89965043",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "nasa:iss074e0319988",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "apex at 24.7%, needs 20.8%-22.9%"
+ },
+ {
+  "key": "wikimedia:84344107",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "crop would run off the bottom"
+ },
+ {
+  "key": "nasa:PIA19820",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "wikimedia:58801135",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "crop would run off the bottom"
+ },
+ {
+  "key": "wikimedia:39148138",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:PIA24970",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "wikimedia:62984333",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:iss067e269019",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "crop would run off the bottom"
+ },
+ {
+  "key": "wikimedia:172286768",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "crop would run off the bottom"
+ },
+ {
+  "key": "nasa:PIA21771",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "wikimedia:178096155",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "nasa:iss071e439624",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "crop would run off the bottom"
+ },
+ {
+  "key": "wikimedia:37344897",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "crop would run off the bottom"
+ },
+ {
+  "key": "nasa:PIA24308",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "wikimedia:129072977",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:32500984",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:139839892",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "wikimedia:92313965",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:70636378",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:175969753",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "crop would run off the bottom"
+ },
+ {
+  "key": "wikimedia:68051688",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:52452954",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:92540608",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:33937689",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:81083793",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:79147003",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "crop would run off the bottom"
+ },
+ {
+  "key": "wikimedia:146319387",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "crop would run off the bottom"
+ },
+ {
+  "key": "wikimedia:199372961",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "cluttered background behind clock (edges 0.60)"
+ },
+ {
+  "key": "wikimedia:57806793",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:91127920",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:44960493",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "crop would run off the bottom"
+ },
+ {
+  "key": "wikimedia:79147005",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:16986135",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:89381510",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:162885912",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "subject too small (5%)"
+ },
+ {
+  "key": "wikimedia:87534223",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:40595582",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "wikimedia:68372371",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:71482461",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:68050492",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "wikimedia:68050583",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:PIA25013",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:AS12-48-7134",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "busy background behind clock (std 0.28)"
+ },
+ {
+  "key": "nasa:B1B_Crew_Night_Launch",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "nasa:PIA10363",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "subject too large (73%)"
+ },
+ {
+  "key": "nasa:PIA08042",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:iss073e0982261",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "apex at 23.8%, needs 20.8%-22.9%"
+ },
+ {
+  "key": "nasa:iss073e0780028",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:jsc2004e52779",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA26302",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:iss045e013851",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "nasa:PIA17250",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:KSC-2009-5856",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA20705",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA12677",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:SSC-20110203-S00095",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "nasa:PIA22193",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA23809",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:iss073e0982450",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "crop would run off the bottom"
+ },
+ {
+  "key": "nasa:PIA17141",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:KSC-2012-2491",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA17004",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:art002e016299",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "nasa:PIA13054",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "crop would run off the bottom"
+ },
+ {
+  "key": "nasa:PIA04916",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA21350",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:KSC-2012-2487",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA16869",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "nasa:PIA18921",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA25014",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA13994",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA25061",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:as12-46-6728",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "nasa:PIA14601",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:art002e021278",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "subject too small (7%)"
+ },
+ {
+  "key": "nasa:PIA26295",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA25172",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:GSFC_20171208_Archive_e001593",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA06567",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:as17-152-23272",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:jsc2022e046401",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA22964",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:iss063e058236",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:Artemis II at the pad sunsetting jet in background 01292026_11",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "nasa:iss028e030097",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:iss074e0089803",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:iss028e030096",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:PIA13080",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA09118",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA25692",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA08182",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA20015",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:iss063e058409",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:S89-41095",
+  "date": "2026-11-17",
+  "used": true
+ },
+ {
+  "key": "nasa:iss071e378517",
+  "date": "2026-11-17",
+  "used": true
+ },
+ {
+  "key": "wikimedia:157291331",
+  "date": "2026-11-17",
+  "used": true
+ },
+ {
+  "key": "nasa:as14-66-09278",
+  "date": "2026-11-17",
+  "used": true
+ },
+ {
+  "key": "nasa:KSC-20180812-PH_AWG03_0014",
+  "date": "2026-11-17",
+  "used": true
+ },
+ {
+  "key": "nasa:KSC-20250226-PH-CSH01_0002",
+  "date": "2026-11-17",
+  "used": true
+ },
+ {
+  "key": "nasa:PIA21780",
+  "date": "2026-11-17",
+  "used": true
+ },
+ {
+  "key": "nasa:PIA16842",
+  "date": "2026-11-17",
+  "used": true
  }
 ]
