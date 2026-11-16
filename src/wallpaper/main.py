@@ -102,8 +102,8 @@ def main(argv=None) -> int:
         else:
             # Photos you drop into inbox/ (e.g. saved from r/EarthPorn via the
             # GitHub app) are tried first, then the web sources.
-            dirs = [ROOT / "inbox"] + [Path(p) for p in os.environ.get("INBOX_DIRS", "").split(",") if p]
-            cands = [c for d in dirs if d.is_dir() for c in local_candidates(d) if c.key not in seen]
+            inbox = ROOT / "inbox"
+            cands = [c for c in (local_candidates(inbox) if inbox.is_dir() else []) if c.key not in seen]
             cands += fetchers.gather(cfg["sources"], min_h, min_w, seen)
         log.info("%d fresh candidates", len(cands))
         tried = 0

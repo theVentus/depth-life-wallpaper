@@ -1,16 +1,15 @@
 # Depth Life Wallpaper
 
-A new iPhone Lock Screen every morning: a popular photo whose subject iOS
-can layer **over the clock** (Depth Effect), with the
-[Life Calendar](https://thelifecalendar.com) week grid sandwiched between
-the photo and the subject.
+A new iPhone Lock Screen every morning: an EarthPorn-style landscape whose
+peak iOS can layer **over the clock** (Depth Effect), with the
+[Life Calendar](https://thelifecalendar.com) year grid on top.
 
 Everything runs on GitHub (Actions + Pages). The phone runs a two-action
 Shortcut. No computer is involved after setup.
 
 ```
 GitHub Actions (02:30 IST daily)
-  fetch photos ────────── inbox (laptop Reddit pull / phone uploads) → Unsplash landscape searches
+  fetch photos ────────── inbox/ (your uploads) → Unsplash · Pexels · Wikimedia Commons landscapes
   segment subject ─────── BiRefNet (rembg)
   depth checks ────────── subject apex tucks under the clock numerals,
                           8–65% subject area, clean outline, calm clock background
@@ -44,6 +43,7 @@ its own render and checked pixel-for-pixel (`tests/compare_year.py`):
 1. **Secrets** (repo → Settings → Secrets and variables → Actions):
    - `BIRTH_DATE`: `YYYY-MM-DD` (only needed for the life/weeks view)
    - `UNSPLASH_ACCESS_KEY`: from a free app at <https://unsplash.com/oauth/applications>
+   - `PEXELS_API_KEY` (optional): free at <https://www.pexels.com/api/>
 2. **Pages**: Settings → Pages → Deploy from branch → `gh-pages` / root.
    The branch appears after the first run.
 3. **First run**: Actions → Daily wallpaper → Run workflow.
@@ -62,29 +62,26 @@ its own render and checked pixel-for-pixel (`tests/compare_year.py`):
 3. Run it once by hand, then long-press the Lock Screen → Customize and
    check that Depth Effect is on (⋯ menu).
 
-## Reddit photos (optional, from your laptop)
+## Photo sources
 
-Reddit blocks servers, so `laptop/reddit_pull.py` collects EarthPorn-family
-"hot" photos from your own browser instead, and the cloud does the rest:
+All of these run in the cloud and return landscapes only: no people,
+animals, abstract or macro shots.
 
-```
-powershell -ExecutionPolicy Bypass -File laptop\install_task.ps1   # once: venv + daily task (9:30 and at login)
-%LOCALAPPDATA%\dlw-laptop\Scripts\python.exe laptopeddit_pull.py --login   # once: sign in to Reddit in Edge
-```
+| Source | Key | What it pulls |
+|---|---|---|
+| `inbox/` | none | photos you upload with the GitHub app (e.g. saved from r/EarthPorn); tried first, once each |
+| Unsplash | `UNSPLASH_ACCESS_KEY` | landscape searches (peaks, volcanoes, sea stacks, lone trees…), relevance-ranked |
+| Pexels | `PEXELS_API_KEY` (free, instant: <https://www.pexels.com/api/>) | the same landscape searches |
+| Wikimedia Commons | none | Featured Pictures of landscapes, mountains, rock formations and volcanoes (community-curated) |
+| Reddit | `REDDIT_CLIENT_ID/SECRET` | dormant: Reddit blocks servers and requires approval for new API apps |
 
-Each day it saves up to 6 tall photos, at most once a day, and stops on any
-CAPTCHA or block page. It pushes them to the repo's `inbox` branch, which is
-force-replaced each time so photos never build up in git history. The
-next cloud run tries those first and removes each one once tried. If the
-laptop is off, the cloud keeps going with Unsplash.
-
-From your phone, you can also upload a photo straight to `inbox/` on `main`
-with the GitHub app.
+Sources without a key are skipped silently. Wikimedia needs no key, so
+there is always a supply.
 
 ## Tuning
 
-All thresholds are in `config.toml`: device, timezone, lifespan, photo
-topics and subreddits, and the depth checks. Edit it on github.com and the
+All thresholds are in `config.toml`: device, timezone, grid placement, photo
+searches and categories, and the depth checks. Edit it on github.com and the
 next run picks it up. To refresh only the grid, use Run workflow with
 "grid only" ticked.
 
@@ -102,5 +99,5 @@ was rejected.
 ## Credits
 
 Grid design: thelifecalendar.com by @luismbat and @joao_batalha. Photos:
-Unsplash and Reddit (credited per photo); each day's credit is on the Pages index and in
+Unsplash, Pexels and Wikimedia Commons (credited per photo); each day's credit is on the Pages index and in
 `status.json`. Fonts: Inter and Noto Sans (OFL).

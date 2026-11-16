@@ -45,6 +45,19 @@ queries = [
 queries_per_run = 6      # rotated daily so the pool keeps changing
 pages = 2
 
+[sources.pexels]
+# Reuses the Unsplash queries above. Needs PEXELS_API_KEY (free, instant).
+queries_per_run = 6
+
+[sources.wikimedia]
+# Commons Featured Pictures, no key needed.
+categories = [
+  "Featured pictures of landscapes", "Featured pictures of mountains",
+  "Featured pictures of rock formations", "Featured pictures of volcanoes",
+  "Featured pictures of glaciers", "Featured pictures of coasts",
+]
+categories_per_run = 3
+
 [sources.reddit]
 # Dormant unless REDDIT_CLIENT_ID/SECRET are approved keys: Reddit blocks
 # anonymous access and requires approval for new API apps since 2025-26.

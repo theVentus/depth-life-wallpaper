@@ -36,19 +36,6 @@ jobs:
             mkdir -p site
           fi
 
-      - name: Fetch laptop inbox (Reddit photos pushed by laptop/reddit_pull.py)
-        id: inbox
-        run: |
-          mkdir -p inbox_branch
-          sha=$(git ls-remote --heads origin inbox | cut -f1)
-          echo "sha=$sha" >> "$GITHUB_OUTPUT"
-          if [ -n "$sha" ]; then
-            git fetch --depth 1 origin inbox
-            git --work-tree=inbox_branch checkout origin/inbox -- .
-            git reset -q
-          fi
-          ls inbox_branch
-
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -68,8 +55,8 @@ jobs:
           UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
           REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
           REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           PYTHONPATH: src
-          INBOX_DIRS: inbox_branch
         run: |
           python -m wallpaper.main --site site ${{ inputs.grid_only && '--grid-only' || '' }}
 
@@ -79,18 +66,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/history.json inbox
           git diff --cached --quiet || git commit -m "history: $(date -u +%F)" && git push
-
-      - name: Leave only untried photos on the inbox branch
-        if: steps.inbox.outputs.sha != ''
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          cd inbox_branch
-          git init -q -b inbox
-          git add -A
-          git -c user.name=wallpaper-bot -c user.email=41898282+github-actions[bot]@users.noreply.github.com             commit -q --allow-empty -m "inbox: untried photos"
-          # Lease on the sha we fetched: if the laptop pushed meanwhile, keep its version.
-          git push -q --force-with-lease=inbox:${{ steps.inbox.outputs.sha }}             "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" inbox             || echo "inbox changed during the run; leaving it for tomorrow"
 
       - name: Publish to gh-pages
         uses: peaceiris/actions-gh-pages@v4

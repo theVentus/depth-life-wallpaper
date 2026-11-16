@@ -1,4 +1,5 @@
-"""Candidate photo sources: Unsplash landscape searches and the EarthPorn family on Reddit."""
+"""Candidate photo sources, landscapes only: Unsplash and Pexels searches,
+Wikimedia Commons Featured Pictures, and (dormant) the EarthPorn family on Reddit."""
 from __future__ import annotations
 
 import html
@@ -13,7 +14,7 @@ import requests
 from PIL import Image
 
 log = logging.getLogger(__name__)
-UA = "depth-life-wallpaper/1.0 (personal wallpaper bot)"
+UA = "depth-life-wallpaper/1.0 (personal daily-wallpaper bot; one photo per day; https://github.com)"
 Image.MAX_IMAGE_PIXELS = 120_000_000
 
 # Keep it EarthPorn-style: drop anything tagged/described as people, animals,
@@ -21,7 +22,9 @@ Image.MAX_IMAGE_PIXELS = 120_000_000
 BANNED_TAGS = {"person", "people", "man", "woman", "girl", "boy", "human", "portrait", "selfie",
                "animal", "dog", "cat", "bird", "wildlife", "abstract", "texture", "pattern", "art",
                "illustration", "3d", "render", "flower", "macro", "food", "car", "interior"}
-BANNED_WORDS = {"person", "people", "man", "woman", "girl", "boy", "dog", "cat", "bird", "abstract",
+BANNED_WORDS = {"person", "people", "man", "men", "woman", "women", "girl", "boy", "child", "children",
+                "portrait", "portraits", "dog", "dogs", "cat", "cats", "bird", "birds", "animal", "animals",
+                "insect", "insects", "flower", "flowers", "macro", "abstract",
                 "illustration", "render", "couple", "hiker", "silhouette of a"}
 
 
@@ -41,7 +44,12 @@ class Candidate:
     local_path: str = ""          # inbox / --local files
 
     def download(self) -> Image.Image:
-        r = requests.get(self.image_url, headers={"User-Agent": UA}, timeout=60)
+        import time
+        for attempt in range(3):
+            r = requests.get(self.image_url, headers={"User-Agent": UA}, timeout=60)
+            if r.status_code != 429:
+                break
+            time.sleep(10 * (attempt + 1))  # be polite to rate-limited hosts
         r.raise_for_status()
         img = Image.open(io.BytesIO(r.content))
         img = img.convert("RGB")
@@ -125,6 +133,8 @@ def _reddit_session() -> tuple[requests.Session, str]:
 
 
 def reddit(cfg: dict, min_h: int, min_w: int) -> list[Candidate]:
+    if not (os.environ.get("REDDIT_CLIENT_ID") and os.environ.get("REDDIT_CLIENT_SECRET")):
+        return []  # Reddit blocks anonymous/server access; dormant without approved keys
     s, base = _reddit_session()
     out: list[Candidate] = []
     for sub in cfg["subreddits"]:
@@ -159,8 +169,106 @@ def reddit(cfg: dict, min_h: int, min_w: int) -> list[Candidate]:
     return out
 
 
+def _todays(items: list, n: int) -> list:
+    """Rotate through a list n items per day so the pool keeps changing."""
+    if not items:
+        return []
+    start = (date.today().toordinal() * n) % len(items)
+    return (items[start:] + items[:start])[:n]
+
+
+def _clean_text(text: str) -> bool:
+    t = f" {text.lower()} "
+    return not any(f" {w} " in t for w in BANNED_WORDS)
+
+
+def pexels(cfg: dict, queries: list[str], min_h: int, min_w: int) -> list[Candidate]:
+    key = os.environ.get("PEXELS_API_KEY")
+    if not key:
+        log.info("PEXELS_API_KEY not set; skipping Pexels")
+        return []
+    out: list[Candidate] = []
+    for q in _todays(queries, cfg.get("queries_per_run", 6)):
+        try:
+            r = requests.get("https://api.pexels.com/v1/search", headers={"Authorization": key}, timeout=30,
+                             params={"query": q, "orientation": "portrait", "size": "large", "per_page": 40})
+            r.raise_for_status()
+        except requests.RequestException as e:
+            log.warning("pexels '%s': %s", q, e)
+            continue
+        for p in r.json().get("photos", []):
+            w, h = p["width"], p["height"]
+            if not _big_enough(w, h, min_h, min_w) or not _clean_text(p.get("alt") or ""):
+                continue
+            # Pexels serves resized copies via query params; ~3600 tall is plenty.
+            url = p["src"]["original"] + "?auto=compress&cs=tinysrgb&fit=crop&h=3600"
+            s = min(1.0, 3600 / h)
+            out.append(Candidate(
+                key=f"pexels:{p['id']}", source=f"pexels/{q}", image_url=url,
+                width=round(w * s), height=round(h * s), page_url=p["url"], title=p.get("alt") or "",
+                author=p.get("photographer", ""), author_url=p.get("photographer_url", ""),
+            ))
+    return out
+
+
+# Wikimedia only serves (and doesn't rate-limit) thumbnails at these widths.
+COMMONS_WIDTHS = (960, 1280, 1920, 3840)
+
+
+def _commons_thumb(url: str, w: int, h: int, min_h: int) -> tuple[str, int, int]:
+    """Smallest standard-width thumbnail that is still tall enough."""
+    from urllib.parse import quote
+    for tw in COMMONS_WIDTHS:
+        th = round(h * tw / w)
+        if th >= min_h and tw < w:
+            head, name = url.rsplit("/", 1)
+            thumb = head.replace("/wikipedia/commons/", "/wikipedia/commons/thumb/", 1) + f"/{name}/{tw}px-{name}"
+            return thumb, tw, th
+    return url, w, h
+
+
+def wikimedia(cfg: dict, min_h: int, min_w: int) -> list[Candidate]:
+    """Commons Featured Pictures by category: community-curated, no key."""
+    out: list[Candidate] = []
+    for cat in _todays(cfg["categories"], cfg.get("categories_per_run", 2)):
+        try:
+            r = requests.get("https://commons.wikimedia.org/w/api.php", headers={"User-Agent": UA}, timeout=30, params={
+                "action": "query", "format": "json", "generator": "categorymembers", "gcmtitle": f"Category:{cat}",
+                "gcmtype": "file", "gcmlimit": 500, "gcmsort": "timestamp", "gcmdir": "desc",
+                "prop": "imageinfo", "iiprop": "url|size|mime|extmetadata",
+                "iiextmetadatafilter": "Artist|ObjectName|Categories"})
+            r.raise_for_status()
+            pages = r.json().get("query", {}).get("pages", {}).values()
+        except (requests.RequestException, ValueError) as e:
+            log.warning("wikimedia %s: %s", cat, e)
+            continue
+        for p in pages:
+            ii = (p.get("imageinfo") or [{}])[0]
+            if ii.get("mime") != "image/jpeg" or ii.get("size", 0) > cfg.get("max_bytes", 30_000_000):
+                continue
+            w, h = ii.get("width", 0), ii.get("height", 0)
+            meta = ii.get("extmetadata", {})
+            text = " ".join([p["title"], meta.get("ObjectName", {}).get("value", ""),
+                             meta.get("Categories", {}).get("value", "").replace("|", " ")])
+            if not _big_enough(w, h, min_h, min_w) or not _clean_text(text.replace("_", " ")):
+                continue
+            import re
+            artist = re.sub("<[^>]+>", "", meta.get("Artist", {}).get("value", "")).strip()
+            url, tw, th = _commons_thumb(ii["url"], w, h, min_h)
+            out.append(Candidate(
+                key=f"wikimedia:{p['pageid']}", source=f"wikimedia/{cat}", image_url=url,
+                width=tw, height=th, page_url=ii.get("descriptionurl", ""),
+                title=p["title"].split(":", 1)[-1].rsplit(".", 1)[0].replace("_", " "), author=artist[:80],
+            ))
+    random.shuffle(out)  # no popularity signal; featured status is the quality bar
+    return out
+
+
 def gather(cfg: dict, min_h: int, min_w: int, seen: set[str]) -> list[Candidate]:
-    cands = unsplash(cfg["unsplash"], min_h, min_w) + reddit(cfg["reddit"], min_h, min_w)
+    cands = (unsplash(cfg["unsplash"], min_h, min_w)
+             + pexels(cfg.get("pexels", {}), cfg["unsplash"]["queries"], min_h, min_w)
+             + wikimedia(cfg["wikimedia"], min_h, min_w)
+             + reddit(cfg["reddit"], min_h, min_w))
     fresh = {c.key: c for c in cands if c.key not in seen}
     ranked = sorted(fresh.values(), key=lambda c: c.score, reverse=True)
     # Keep popularity order but interleave sources so one feed can't hog the budget.
