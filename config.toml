@@ -16,7 +16,8 @@ shadow = true              # soft shadow so white dots read over snow / bright s
 show_caption = true
 
 [selection]
-max_candidates = 14      # photos segmented per run (each ~10-20 s on Actions CPU)
+max_candidates = 90      # photos segmented per run (each ~10-20 s on Actions CPU)
+time_budget_min = 35     # stop searching after this long; the pool is topped up from yesterday
 max_upscale = 1.15       # never enlarge the source more than this
 apex_target = 0.225      # subject top lands here (fraction of height)
 min_clock_cover = 0.10   # subject must cover at least this much of the numerals' height...
@@ -29,38 +30,61 @@ max_thin_ratio = 0.35
 max_clock_bg_std = 0.20  # background behind the clock must be calm
 max_clock_bg_edges = 0.55
 
+[pool]
+# Each night renders `size` wallpapers to gh-pages/w/1.jpg .. w/<size>.jpg;
+# the iPhone Shortcut picks one at random every time it runs.
+size = 8
+dark_luma = 0.36          # mean brightness (0 black .. 1 white) below this counts as "dark"
+min_dark_share = 0.75     # at least this share of the pool must be dark
+space_share = 0.30        # aim for this share of space imagery (rest landscapes)
+
 [sources]
-shuffle_top = 6
+max_est_luma = 0.62       # drop photos whose source-reported average colour is brighter
 
-[sources.unsplash]
-# EarthPorn-style landscapes only (no people/animals/abstract). Depth Effect
-# needs a form that rises into the clock, so queries favour landscapes with
-# a clear focal peak / tree / stack. Results are relevance-ranked.
+[sources.landscape]
+# EarthPorn-style scenery with a clear focal form that can rise into the
+# clock; weighted toward night, blue hour and moody light.
 queries = [
-  "mountain peak", "mountain landscape", "dolomites", "patagonia mountains",
-  "volcano landscape", "lone tree landscape", "sea stack", "rock formation desert",
-  "lighthouse cliff", "matterhorn", "fitz roy", "yosemite half dome",
-  "iceland mountain", "waterfall cliff", "canyon spire", "alpine lake mountain",
+  "milky way mountain", "night mountain stars", "moody mountains", "blue hour mountain",
+  "aurora mountain", "volcano night", "dark mountain peak", "mountain peak",
+  "dolomites", "patagonia mountains", "lone tree night", "sea stack night",
+  "matterhorn", "fitz roy", "iceland mountain", "storm mountain",
 ]
-queries_per_run = 6      # rotated daily so the pool keeps changing
-pages = 2
-
-[sources.pexels]
-# Reuses the Unsplash queries above. Needs PEXELS_API_KEY (free, instant).
-queries_per_run = 6
-
-[sources.wikimedia]
-# Commons Featured Pictures, no key needed.
-categories = [
+wikimedia_categories = [
   "Featured pictures of landscapes", "Featured pictures of mountains",
   "Featured pictures of rock formations", "Featured pictures of volcanoes",
   "Featured pictures of glaciers", "Featured pictures of coasts",
 ]
+
+[sources.space]
+# Real imagery and artistic renders. Depth Effect still needs a subject
+# (planet, moon, rocket, station) rising into the clock.
+queries = [
+  "planet earth from space", "moon surface", "space art planet", "saturn",
+  "rocket launch night", "planet render", "astronaut space", "eclipse",
+]
+nasa_queries = [
+  "artist concept exoplanet", "earthrise", "saturn cassini", "jupiter juno",
+  "moon apollo", "rocket launch night", "international space station earth",
+  "artist concept planet", "mars rover landscape", "earth from orbit night",
+]
+wikimedia_categories = ["Featured pictures of astronomy", "Featured pictures of the Moon", "Featured pictures of planets"]
+
+[sources.unsplash]
+queries_per_run = 6       # per kind, rotated daily
+pages = 1
+
+[sources.pexels]
+queries_per_run = 6
+
+[sources.wikimedia]
 categories_per_run = 3
 
+[sources.nasa]
+queries_per_run = 4
+
 [sources.reddit]
-# Dormant unless REDDIT_CLIENT_ID/SECRET are approved keys: Reddit blocks
-# anonymous access and requires approval for new API apps since 2025-26.
+# Dormant unless REDDIT_CLIENT_ID/SECRET are approved keys.
 subreddits = ["EarthPorn", "SkyPorn", "WaterPorn", "AutumnPorn", "WinterPorn", "DesertPorn"]
 sort = "hot"
 limit = 50

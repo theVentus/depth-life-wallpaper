@@ -7,7 +7,10 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import math
 import os
+import re
+import shutil
 import sys
 import time
 import tomllib
@@ -16,6 +19,7 @@ from datetime import date, datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+import numpy as np
 from PIL import Image
 
 from . import fetchers, vision
@@ -92,7 +96,14 @@ def main(argv=None) -> int:
     if debug:
         debug.mkdir(parents=True, exist_ok=True)
 
-    accepted = None
+    pool = cfg["pool"]
+    N = int(pool["size"])
+    dark_luma = float(pool["dark_luma"])
+    max_bright = N - math.ceil(N * pool["min_dark_share"])
+    space_cap = round(N * pool["space_share"])
+    land_cap = N - space_cap
+
+    accepted: list[dict] = []
     if not args.grid_only:
         min_h = int(dev.height / sel["max_upscale"]) + 1
         min_w = int(min_h * dev.width / dev.height) + 1
@@ -100,94 +111,156 @@ def main(argv=None) -> int:
         if args.local:
             cands = local_candidates(Path(args.local))
         else:
-            # Photos you drop into inbox/ (e.g. saved from r/EarthPorn via the
-            # GitHub app) are tried first, then the web sources.
+            # Photos you upload to inbox/ are tried first, then the web sources.
             inbox = ROOT / "inbox"
             cands = [c for c in (local_candidates(inbox) if inbox.is_dir() else []) if c.key not in seen]
-            cands += fetchers.gather(cfg["sources"], min_h, min_w, seen)
-        log.info("%d fresh candidates", len(cands))
-        tried = 0
+            cands += fetchers.gather(cfg["sources"], min_h, min_w, seen, dark_luma)
+        log.info("%d fresh candidates; pool %d (<= %d bright, ~%d space)", len(cands), N, max_bright, space_cap)
         consumed: list[Path] = []
-        for c in cands:
-            if tried >= sel["max_candidates"]:
-                break
-            tried += 1
+        deferred: list = []  # skipped only because their kind was full; tried if the pool is short
+        t_start = time.time()
+        tried = [0]
+
+        def kind_full(c) -> bool:
+            n = sum(1 for a in accepted if a["c"].kind == c.kind)
+            return n >= (space_cap if c.kind == fetchers.SPACE else land_cap)
+
+        def try_one(c) -> None:
+            tried[0] += 1
             t0 = time.time()
             try:
                 img = Image.open(c.local_path).convert("RGB") if c.local_path else c.download()
             except Exception as e:  # noqa: BLE001 - any bad download just skips
                 log.warning("skip %s: download failed (%s)", c.key, e)
-                continue
-            matte = vision.segment(img)
-            v = vision.evaluate(img, matte, dev, sel)
-            log.info("%s %s [%s] %s %.1fs", "ACCEPT" if v.ok else "reject", c.key, c.source, v.reason if not v.ok else v.metrics, time.time() - t0)
-            if debug:
-                name = c.key.replace(":", "_").replace("/", "_")
-                if v.ok:
-                    bg, fg = make_layers(img, matte, v.crop, dev)
-                    debug_preview(composite(bg, fg, birth, today, lifespan, style, cfg["grid"]), dev, "ACCEPT").save(debug / f"{name}.jpg")
-                else:
-                    red = Image.new("RGB", img.size, (255, 0, 0))
-                    tint = Image.fromarray((matte * 110).astype("uint8"))
-                    th = Image.composite(red, img, tint); th.thumbnail((600, 1200))
-                    th.save(debug / f"{name}__{v.reason[:40].replace(' ', '_').replace('/', '-')}.jpg")
+                return
             if c.local_path and not args.local:
                 consumed.append(Path(c.local_path))
+            if img.height < min_h or img.width < min_w:  # cheap check before the slow model
+                log.info("reject %s [%s] too small (%dx%d)", c.key, c.source, img.width, img.height)
+                if not args.local:
+                    history.append({"key": c.key, "date": today.isoformat(), "used": False, "reason": "too small"})
+                return
+            matte = vision.segment(img)
+            v = vision.evaluate(img, matte, dev, sel)
+            luma = None
             if v.ok:
-                accepted = (c, img, matte, v)
-                break
-            if not args.local:
+                bg, fg = make_layers(img, matte, v.crop, dev)
+                luma = float(np.asarray(bg.convert("L"), dtype=np.float32).mean() / 255)
+                n_bright = sum(1 for a in accepted if a["luma"] > dark_luma)
+                if luma > dark_luma and n_bright >= max_bright:
+                    v = vision.Verdict(False, f"too bright for today's dark quota ({luma:.2f})")
+            log.info("%s %s [%s] %s %.1fs", "ACCEPT" if v.ok else "reject", c.key, c.source,
+                     ({**v.metrics, "luma": round(luma, 3)} if v.ok else v.reason), time.time() - t0)
+            if debug:
+                name = c.key.replace(":", "_").replace("/", "_")[:80]
+                if v.ok:
+                    debug_preview(composite(bg, fg, birth, today, lifespan, style, cfg["grid"]), dev,
+                                  f"ACCEPT {c.kind} luma {luma:.2f}").save(debug / f"{name}.jpg")
+                else:
+                    red = Image.new("RGB", img.size, (255, 0, 0))
+                    th = Image.composite(red, img, Image.fromarray((matte * 110).astype("uint8")))
+                    th.thumbnail((600, 1200))
+                    th.save(debug / f"{name}__{re.sub(r'[^A-Za-z0-9.]+', '_', v.reason)[:40]}.jpg")
+            if v.ok:
+                accepted.append({"c": c, "bg": bg, "fg": fg, "v": v, "luma": luma})
+            elif not args.local and not v.reason.startswith("too bright for today"):
                 history.append({"key": c.key, "date": today.isoformat(), "used": False, "reason": v.reason})
-                if c.local_path:
-                    log.warning("inbox photo %s rejected: %s", c.title, v.reason)
 
-    if not args.grid_only:
-        for p in consumed:  # tried once (used or rejected): drop from the inbox
+        def out_of_budget() -> bool:
+            return (len(accepted) >= N or tried[0] >= sel["max_candidates"]
+                    or time.time() - t_start > sel.get("time_budget_min", 35) * 60)
+
+        for c in cands:
+            if out_of_budget():
+                break
+            if kind_full(c):
+                deferred.append(c)
+                continue
+            try_one(c)
+        for c in deferred:  # e.g. not enough space shots passed: let landscapes fill in
+            if out_of_budget():
+                break
+            try_one(c)
+        log.info("accepted %d/%d after %d tries in %.0fs", len(accepted), N, tried[0], time.time() - t_start)
+        for p in consumed:  # inbox photos are tried once (used or rejected)
             p.unlink(missing_ok=True)
             p.with_suffix(".json").unlink(missing_ok=True)
 
-    if accepted:
-        c, img, matte, v = accepted
-        bg, fg = make_layers(img, matte, v.crop, dev)
-        layers.mkdir(parents=True, exist_ok=True)
-        save_jpeg(bg, layers / "bg.jpg")
-        fg.save(layers / "fg.png", optimize=True)
-        meta = {k: getattr(c, k) for k in ("key", "source", "page_url", "title", "author", "author_url")}
-        meta.update(date=today.isoformat(), metrics=v.metrics)
-        (layers / "photo.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
+    # ---- assemble the pool: today's picks first, then yesterday's to top up
+    slots: list[dict] = []
+    new_layers = site / "layers_new"
+    shutil.rmtree(new_layers, ignore_errors=True)
+    for a in accepted:
+        c, v = a["c"], a["v"]
+        d = new_layers / f"{len(slots) + 1}"
+        d.mkdir(parents=True)
+        save_jpeg(a["bg"], d / "bg.jpg")
+        if cfg["grid"].get("layer", "front") == "behind":
+            a["fg"].save(d / "fg.png", optimize=True)
+        meta = {k: getattr(c, k) for k in ("key", "source", "kind", "page_url", "title", "author", "author_url")}
+        meta.update(date=today.isoformat(), luma=round(a["luma"], 3), metrics=v.metrics)
+        (d / "photo.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
+        slots.append(meta)
         if not args.local:
             c.mark_used()
             history.append({"key": c.key, "date": today.isoformat(), "used": True})
-    elif (layers / "bg.jpg").exists() and (layers / "fg.png").exists():
-        log.warning("no new photo passed today; re-using the last one with today's grid")
-    else:
-        log.error("no photo passed and there is no previous photo to fall back on")
+    old_dirs = sorted((p for p in layers.glob("*") if (p / "bg.jpg").exists()), key=lambda p: p.name)
+    if (layers / "bg.jpg").exists():  # pre-pool single-photo layout
+        old_dirs.append(layers)
+    have = {s["key"] for s in slots}
+    for od in old_dirs:
+        if len(slots) >= N:
+            break
+        pj = od / "photo.json"
+        meta = json.loads(pj.read_text(encoding="utf-8")) if pj.exists() else {"key": od.name}
+        if meta.get("key") in have:
+            continue
+        d = new_layers / f"{len(slots) + 1}"
+        d.mkdir(parents=True)
+        for f in ("bg.jpg", "fg.png", "photo.json"):
+            if (od / f).exists():
+                shutil.copy2(od / f, d / f)
+        slots.append(meta)
+        have.add(meta.get("key"))
+    if not slots:
+        log.error("no photo passed and there is no previous pool to fall back on")
         return 1
+    shutil.rmtree(layers, ignore_errors=True)
+    new_layers.rename(layers)
 
-    bg = Image.open(layers / "bg.jpg").convert("RGB")
-    fg = Image.open(layers / "fg.png").convert("RGBA")
-    final = composite(bg, fg, birth, today, lifespan, style, cfg["grid"])
-    save_jpeg(final, site / "wallpaper.jpg")
-    photo = json.loads((layers / "photo.json").read_text(encoding="utf-8"))
-    (site / "status.json").write_text(json.dumps({"rendered": datetime.now(ZoneInfo(cfg["timezone"])).isoformat(timespec="seconds"),
-                                                  "new_photo_today": bool(accepted), "photo": photo}, indent=2), encoding="utf-8")
-    _write_index(site, photo)
+    # ---- render: w/1.jpg .. w/N.jpg (repeats if the pool is still short)
+    wdir = site / "w"
+    shutil.rmtree(wdir, ignore_errors=True)
+    wdir.mkdir(parents=True)
+    for i in range(N):
+        d = layers / f"{i % len(slots) + 1}"
+        bg = Image.open(d / "bg.jpg").convert("RGB")
+        fg = Image.open(d / "fg.png").convert("RGBA") if (d / "fg.png").exists() else Image.new("RGBA", bg.size)
+        save_jpeg(composite(bg, fg, birth, today, lifespan, style, cfg["grid"]), wdir / f"{i + 1}.jpg")
+    shutil.copy2(wdir / "1.jpg", site / "wallpaper.jpg")  # the fixed URL keeps working
+    (site / "status.json").write_text(json.dumps({
+        "rendered": datetime.now(ZoneInfo(cfg["timezone"])).isoformat(timespec="seconds"),
+        "new_today": len(accepted), "pool_size": N, "photos": slots}, indent=2), encoding="utf-8")
+    _write_index(site, slots, N)
     if not args.local:
         hist_path.parent.mkdir(parents=True, exist_ok=True)
-        hist_path.write_text(json.dumps(history[-3000:], indent=1), encoding="utf-8")
-    log.info("wrote %s", site / "wallpaper.jpg")
+        hist_path.write_text(json.dumps(history[-4000:], indent=1), encoding="utf-8")
+    log.info("wrote %d wallpapers (%d new today) to %s", N, len(accepted), wdir)
     return 0
 
 
-def _write_index(site: Path, photo: dict) -> None:
+def _write_index(site: Path, slots: list[dict], n: int) -> None:
     from html import escape as e
     (site / ".nojekyll").write_text("", encoding="utf-8")
-    (site / "index.html").write_text(f"""<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
-<title>Today's wallpaper</title><style>body{{background:#1a1a1a;color:#aaa;font:15px system-ui;margin:16px;text-align:center}}img{{max-width:min(420px,100%);border-radius:24px}}a{{color:#ddd}}</style>
-<img src="wallpaper.jpg" alt="today's wallpaper"><p>Photo: <a href="{e(photo.get('page_url',''))}">{e(photo.get('title','') or 'source')}</a>
-by <a href="{e(photo.get('author_url',''))}">{e(photo.get('author',''))}</a> via {e(photo.get('source',''))} &middot; {e(photo.get('date',''))}</p>
-""", encoding="utf-8")
-
+    cards = "".join(
+        f'<figure><img src="w/{i + 1}.jpg" loading=lazy><figcaption>{i + 1}. <a href="{e(s.get("page_url", ""))}">'
+        f'{e((s.get("title") or "source")[:60])}</a><br>{e(s.get("author", ""))} · {e(s.get("source", ""))}</figcaption></figure>'
+        for i, s in enumerate(slots[:n]))
+    (site / "index.html").write_text(
+        '<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">'
+        '<title>Wallpaper pool</title><style>body{background:#111;color:#999;font:13px system-ui;margin:16px}'
+        'main{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}'
+        'img{width:100%;border-radius:14px}a{color:#ddd}</style><main>' + cards + '</main>\n', encoding="utf-8")
 
 if __name__ == "__main__":
     sys.exit(main())

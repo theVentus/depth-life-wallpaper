@@ -35,11 +35,11 @@ def segment(img: Image.Image) -> np.ndarray:
     from rembg import new_session, remove
 
     if _session is None:
-        _session = new_session(os.environ.get("REMBG_MODEL", "birefnet-general-lite"))
+        _session = new_session(os.environ.get("REMBG_MODEL", "isnet-general-use"))
     work = img.convert("RGB")
     long_side = max(work.size)
-    if long_side > 2048:  # model runs at 1024 internally; no gain from feeding more
-        s = 2048 / long_side
+    if long_side > 1280:  # model runs at 1024 internally; no gain from feeding more
+        s = 1280 / long_side
         work = work.resize((round(work.width * s), round(work.height * s)), Image.LANCZOS)
     matte = remove(work, session=_session, only_mask=True)
     if matte.size != img.size:

@@ -1,7 +1,8 @@
 # Depth Life Wallpaper
 
-A new iPhone Lock Screen every morning: an EarthPorn-style landscape whose
-peak iOS can layer **over the clock** (Depth Effect), with the
+A fresh iPhone Lock Screen every time the Shortcut runs: mostly dark,
+EarthPorn-style landscapes and space imagery (real and artistic renders)
+whose subject iOS can layer **over the clock** (Depth Effect), with the
 [Life Calendar](https://thelifecalendar.com) year grid on top.
 
 Everything runs on GitHub (Actions + Pages). The phone runs a two-action
@@ -9,20 +10,20 @@ Shortcut. No computer is involved after setup.
 
 ```
 GitHub Actions (02:30 IST daily)
-  fetch photos ────────── inbox/ (your uploads) → Unsplash · Pexels · Wikimedia Commons landscapes
+  fetch photos ────────── inbox/ → Unsplash · Pexels · Wikimedia · NASA (landscapes ~70%, space ~30%)
   segment subject ─────── BiRefNet (rembg)
   depth checks ────────── subject apex tucks under the clock numerals,
                           8–65% subject area, clean outline, calm clock background
   crop ────────────────── apex at 22.5% of height, ≤1.15× upscale
   compose ─────────────── photo → year grid (front, lower half) → RGB JPEG
-  publish ─────────────── gh-pages branch → https://raw.githubusercontent.com/<user>/<repo>/gh-pages/wallpaper.jpg
-iPhone Shortcut (06:00 daily)
-  Get Contents of URL → Set Wallpaper Photo (Lock Screen)
+  pool ────────────────── 8 wallpapers, at least 75% dark → gh-pages/w/1.jpg … w/8.jpg
+iPhone Shortcut (any time it runs)
+  Random Number 1–8 → Get Contents of URL (…/w/N.jpg) → Set Wallpaper Photo
 ```
 
 Photos that iOS wouldn't layer are discarded and the next candidate is
-tried. If nothing passes on a given day, yesterday's photo is reused with
-today's grid, so the wallpaper still updates.
+tried. If fewer than 8 pass on a given night, the pool is topped up with
+yesterday's photos, re-rendered with today's grid.
 
 ## The grid
 
@@ -54,33 +55,37 @@ also get a small credits page at `https://<user>.github.io/<repo>/`.
 
 ## iPhone setup
 
-1. Lock Screen: long-press → **+** → Photos → pick any photo → Add. This is the
-   slot the automation will overwrite. Keep the clock at its default size
-   (don't stretch it) and add **no widgets below the clock**. Either one
-   turns Depth Effect off.
+1. Lock Screen: long-press → **+** → Photos → any photo → Add. Keep the
+   clock at its default size and add **no widgets below the clock**.
 2. Shortcuts → Automation → **+** → Time of Day → 06:00, Daily →
    **Run Immediately**, Notify When Run off → New Blank Automation:
-   1. **Get Contents of URL**: `https://raw.githubusercontent.com/<user>/<repo>/gh-pages/wallpaper.jpg`
-   2. **Set Wallpaper Photo**: Lock Screen. Tap the arrow and turn off
-      **Show Preview** and **Crop to Subject**.
-3. Run it once by hand, then long-press the Lock Screen → Customize and
-   check that Depth Effect is on (⋯ menu).
+   1. **Random Number**: Minimum 1, Maximum 8
+   2. **Get Contents of URL**:
+      `https://raw.githubusercontent.com/<user>/<repo>/gh-pages/w/` + the
+      **Random Number** variable + `.jpg`
+   3. **Set Wallpaper Photo**: Lock Screen. Turn off **Show Preview** and
+      **Crop to Subject**.
+3. Run it whenever you want a different wallpaper: each run picks one of
+   today's 8 at random. Add more Time of Day automations if you want it to
+   change through the day.
 
 ## Photo sources
 
-All of these run in the cloud and return landscapes only: no people,
-animals, abstract or macro shots.
+No people, animals, flowers or close-ups. Landscapes also exclude
+abstract art; space allows artistic renders.
 
-| Source | Key | What it pulls |
-|---|---|---|
-| `inbox/` | none | photos you upload with the GitHub app (e.g. saved from r/EarthPorn); tried first, once each |
-| Unsplash | `UNSPLASH_ACCESS_KEY` | landscape searches (peaks, volcanoes, sea stacks, lone trees…), relevance-ranked |
-| Pexels | `PEXELS_API_KEY` (free, instant: <https://www.pexels.com/api/>) | the same landscape searches |
-| Wikimedia Commons | none | Featured Pictures of landscapes, mountains, rock formations and volcanoes (community-curated) |
-| Reddit | `REDDIT_CLIENT_ID/SECRET` | dormant: Reddit blocks servers and requires approval for new API apps |
+| Source | Key | Landscapes | Space |
+|---|---|---|---|
+| `inbox/` | none | your uploads, tried first | – |
+| Unsplash | `UNSPLASH_ACCESS_KEY` | night / moody peak searches | planets, moon, launches, space art |
+| Pexels | `PEXELS_API_KEY` | same searches | same searches |
+| Wikimedia Commons | none | Featured Pictures: landscapes, mountains, volcanoes, glaciers, coasts | Featured Pictures: astronomy, the Moon, planets |
+| NASA Image Library | none | – | mission imagery and artist's concepts |
+| Reddit | approved keys only | dormant | – |
 
-Sources without a key are skipped silently. Wikimedia needs no key, so
-there is always a supply.
+Darkness: Unsplash and Pexels report each photo's average colour, so very
+bright photos are dropped before downloading. Every accepted crop is then
+measured, and at least 75% of the pool must fall below `dark_luma`.
 
 ## Tuning
 
@@ -103,5 +108,5 @@ was rejected.
 ## Credits
 
 Grid design: thelifecalendar.com by @luismbat and @joao_batalha. Photos:
-Unsplash, Pexels and Wikimedia Commons (credited per photo); each day's credit is on the Pages index and in
-`status.json`. Fonts: Inter and Noto Sans (OFL).
+Unsplash, Pexels, Wikimedia Commons and NASA (credited per photo in
+`status.json` and on the Pages index). Fonts: Inter and Noto Sans (OFL).
