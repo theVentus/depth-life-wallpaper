@@ -3,3 +3,6 @@ __pycache__/
 site/
 debug/
 *.pyc
+laptop/.browser-profile/
+laptop/pulled.json
+inbox/reddit_*

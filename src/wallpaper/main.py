@@ -35,17 +35,29 @@ def load_history(p: Path) -> list[dict]:
 
 
 def local_candidates(folder: Path) -> list[fetchers.Candidate]:
+    """Image files in a folder; an optional <name>.json sidecar (written by
+    laptop/reddit_pull.py) supplies source/title/page_url for the credit."""
     out = []
     for f in sorted(folder.iterdir()):
-        if f.suffix.lower() in (".jpg", ".jpeg", ".png", ".webp"):
+        if f.suffix.lower() not in (".jpg", ".jpeg", ".png", ".webp"):
+            continue
+        try:
+            with Image.open(f) as im:
+                w, h = im.size
+        except OSError:
+            log.warning("skip unreadable %s", f.name)
+            continue
+        meta = {}
+        side = f.with_suffix(".json")
+        if side.exists():
             try:
-                with Image.open(f) as im:
-                    w, h = im.size
-            except OSError:
-                log.warning("skip unreadable %s", f.name)
-                continue
-            out.append(fetchers.Candidate(key=f"local:{f.name}", source="local", image_url=f.as_uri(),
-                                          width=w, height=h, page_url=str(f), title=f.stem))
+                meta = json.loads(side.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                pass
+        out.append(fetchers.Candidate(
+            key=f"local:{f.name}", source=meta.get("source", "local"), image_url=f.as_uri(),
+            width=w, height=h, page_url=meta.get("page_url", ""), title=meta.get("title", f.stem),
+            author=meta.get("author", ""), local_path=str(f)))
     return out
 
 
@@ -62,10 +74,10 @@ def main(argv=None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 
     cfg = tomllib.loads(Path(args.config).read_text(encoding="utf-8"))
-    if not args.birth_date:
-        log.error("BIRTH_DATE is not set (repo secret or --birth-date YYYY-MM-DD)")
+    if not args.birth_date and cfg["grid"].get("view", "year") == "life":
+        log.error("BIRTH_DATE is not set (repo secret or --birth-date YYYY-MM-DD); needed for the life view")
         return 2
-    birth = date.fromisoformat(args.birth_date.strip())
+    birth = date.fromisoformat(args.birth_date.strip()) if args.birth_date else date(2000, 1, 1)
     today = datetime.now(ZoneInfo(cfg["timezone"])).date()
     dev = DEVICES[cfg["device"]]
     style = GridStyle(show_caption=cfg["grid"].get("show_caption", True))
@@ -90,18 +102,19 @@ def main(argv=None) -> int:
         else:
             # Photos you drop into inbox/ (e.g. saved from r/EarthPorn via the
             # GitHub app) are tried first, then the web sources.
-            inbox = ROOT / "inbox"
-            cands = [c for c in (local_candidates(inbox) if inbox.is_dir() else []) if c.key not in seen]
+            dirs = [ROOT / "inbox"] + [Path(p) for p in os.environ.get("INBOX_DIRS", "").split(",") if p]
+            cands = [c for d in dirs if d.is_dir() for c in local_candidates(d) if c.key not in seen]
             cands += fetchers.gather(cfg["sources"], min_h, min_w, seen)
         log.info("%d fresh candidates", len(cands))
         tried = 0
+        consumed: list[Path] = []
         for c in cands:
             if tried >= sel["max_candidates"]:
                 break
             tried += 1
             t0 = time.time()
             try:
-                img = Image.open(Path(c.page_url)).convert("RGB") if c.source == "local" else c.download()
+                img = Image.open(c.local_path).convert("RGB") if c.local_path else c.download()
             except Exception as e:  # noqa: BLE001 - any bad download just skips
                 log.warning("skip %s: download failed (%s)", c.key, e)
                 continue
@@ -112,19 +125,26 @@ def main(argv=None) -> int:
                 name = c.key.replace(":", "_").replace("/", "_")
                 if v.ok:
                     bg, fg = make_layers(img, matte, v.crop, dev)
-                    debug_preview(composite(bg, fg, birth, today, lifespan, style), dev, "ACCEPT").save(debug / f"{name}.jpg")
+                    debug_preview(composite(bg, fg, birth, today, lifespan, style, cfg["grid"]), dev, "ACCEPT").save(debug / f"{name}.jpg")
                 else:
                     red = Image.new("RGB", img.size, (255, 0, 0))
                     tint = Image.fromarray((matte * 110).astype("uint8"))
                     th = Image.composite(red, img, tint); th.thumbnail((600, 1200))
                     th.save(debug / f"{name}__{v.reason[:40].replace(' ', '_').replace('/', '-')}.jpg")
+            if c.local_path and not args.local:
+                consumed.append(Path(c.local_path))
             if v.ok:
                 accepted = (c, img, matte, v)
                 break
             if not args.local:
                 history.append({"key": c.key, "date": today.isoformat(), "used": False, "reason": v.reason})
-                if c.source == "local":
+                if c.local_path:
                     log.warning("inbox photo %s rejected: %s", c.title, v.reason)
+
+    if not args.grid_only:
+        for p in consumed:  # tried once (used or rejected): drop from the inbox
+            p.unlink(missing_ok=True)
+            p.with_suffix(".json").unlink(missing_ok=True)
 
     if accepted:
         c, img, matte, v = accepted
@@ -146,7 +166,7 @@ def main(argv=None) -> int:
 
     bg = Image.open(layers / "bg.jpg").convert("RGB")
     fg = Image.open(layers / "fg.png").convert("RGBA")
-    final = composite(bg, fg, birth, today, lifespan, style)
+    final = composite(bg, fg, birth, today, lifespan, style, cfg["grid"])
     save_jpeg(final, site / "wallpaper.jpg")
     photo = json.loads((layers / "photo.json").read_text(encoding="utf-8"))
     (site / "status.json").write_text(json.dumps({"rendered": datetime.now(ZoneInfo(cfg["timezone"])).isoformat(timespec="seconds"),

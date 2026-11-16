@@ -38,6 +38,7 @@ class Candidate:
     author_url: str = ""
     score: float = 0.0
     download_location: str = ""  # Unsplash API guideline: ping on use
+    local_path: str = ""          # inbox / --local files
 
     def download(self) -> Image.Image:
         r = requests.get(self.image_url, headers={"User-Agent": UA}, timeout=60)

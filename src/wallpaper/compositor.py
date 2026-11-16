@@ -8,7 +8,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from .device import Device
-from .grid import GridStyle, render_grid_overlay
+from .grid import GridStyle, render_grid_overlay, render_year_overlay
 
 
 def make_layers(img: Image.Image, matte: np.ndarray, box, dev: Device) -> tuple[Image.Image, Image.Image]:
@@ -21,10 +21,23 @@ def make_layers(img: Image.Image, matte: np.ndarray, box, dev: Device) -> tuple[
     return bg, fg
 
 
-def composite(bg: Image.Image, fg: Image.Image, birth: date, today: date, lifespan: int, style: GridStyle) -> Image.Image:
+def composite(bg: Image.Image, fg: Image.Image, birth: date, today: date, lifespan: int, style: GridStyle,
+              grid_cfg: dict | None = None) -> Image.Image:
+    g = grid_cfg or {}
     canvas = bg.convert("RGBA")
-    canvas = Image.alpha_composite(canvas, render_grid_overlay(canvas.size, birth, today, lifespan, style))
-    canvas = Image.alpha_composite(canvas, fg)
+    if g.get("view", "year") == "year":
+        overlay = render_year_overlay(canvas.size, today, style, scale=g.get("scale", 1.0),
+                                      caption_baseline=g.get("caption_baseline"), shadow=g.get("shadow", False))
+    else:
+        overlay = render_grid_overlay(canvas.size, birth, today, lifespan, style)
+    if g.get("layer", "front") == "behind":
+        # photo -> grid -> subject cutout: the subject hides part of the grid
+        canvas = Image.alpha_composite(canvas, overlay)
+        canvas = Image.alpha_composite(canvas, fg)
+    else:
+        # photo -> grid: grid always fully visible; it sits well below the
+        # clock, so iOS's own subject/clock layering is unaffected
+        canvas = Image.alpha_composite(canvas, overlay)
     # iOS only offers Depth Effect on real photos: flat RGB JPEG, no alpha.
     return canvas.convert("RGB")
 

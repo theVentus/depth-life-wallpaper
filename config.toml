@@ -6,6 +6,13 @@ timezone = "Asia/Kolkata"      # decides which "today" the grid counts to
 lifespan_years = 90            # thelifecalendar.com default ("xx% to 90")
 
 [grid]
+# thelifecalendar.com Year Calendar ("Days"): 365 dots, today in orange,
+# "<n>d left · <p>%". view = "life" switches to the 90-year weeks grid.
+view = "year"
+layer = "front"            # "front": grid over the photo, always visible; "behind": subject covers it
+scale = 0.68               # 1.0 = their exact size (fills 28-85% of the screen)
+caption_baseline = 0.86    # caption sits here (fraction of height); grid stacks above it
+shadow = true              # soft shadow so white dots read over snow / bright sky
 show_caption = true
 
 [selection]
