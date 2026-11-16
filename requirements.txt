@@ -1,0 +1,7 @@
+rembg[cpu]==2.0.87
+onnxruntime==1.32.0
+pillow==13.0.0
+numpy==2.5.5
+scipy==1.18.1
+requests==2.34.2
+tzdata==2026.6

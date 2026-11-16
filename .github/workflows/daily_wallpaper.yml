@@ -1,0 +1,78 @@
+name: Daily wallpaper
+
+on:
+  schedule:
+    # 21:00 UTC = 02:30 IST. GitHub may start scheduled runs late, so this
+    # leaves hours of slack before the iPhone automation fetches at 06:00.
+    - cron: "0 21 * * *"
+  workflow_dispatch:
+    inputs:
+      grid_only:
+        description: "Only refresh the grid on the current photo"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wallpaper
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch last published site (previous photo layers)
+        run: |
+          if git ls-remote --exit-code --heads origin gh-pages >/dev/null; then
+            git fetch --depth 1 origin gh-pages
+            mkdir -p site && git --work-tree=site checkout origin/gh-pages -- .
+            git reset -q
+          else
+            mkdir -p site
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Cache segmentation model
+        uses: actions/cache@v4
+        with:
+          path: ~/.u2net
+          key: rembg-${{ hashFiles('requirements.txt') }}-birefnet-general-lite
+
+      - name: Render wallpaper
+        env:
+          BIRTH_DATE: ${{ secrets.BIRTH_DATE }}
+          UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+          PYTHONPATH: src
+        run: |
+          python -m wallpaper.main --site site ${{ inputs.grid_only && '--grid-only' || '' }}
+
+      - name: Save photo history (also keeps the schedule alive)
+        run: |
+          git config user.name "wallpaper-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/history.json
+          git diff --cached --quiet || git commit -m "history: $(date -u +%F)" && git push
+
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: site
+          force_orphan: true
+          user_name: wallpaper-bot
+          user_email: 41898282+github-actions[bot]@users.noreply.github.com
+          commit_message: wallpaper

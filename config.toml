@@ -1,0 +1,46 @@
+# Depth Effect + Life Calendar wallpaper settings.
+# Your birth date is NOT stored here; it comes from the BIRTH_DATE repo secret.
+
+device = "iphone_17_pro_max"   # 1320x2868 (iPhone 16/17 Pro Max)
+timezone = "Asia/Kolkata"      # decides which "today" the grid counts to
+lifespan_years = 90            # thelifecalendar.com default ("xx% to 90")
+
+[grid]
+show_caption = true
+
+[selection]
+max_candidates = 14      # photos segmented per run (each ~10-20 s on Actions CPU)
+max_upscale = 1.15       # never enlarge the source more than this
+apex_target = 0.225      # subject top lands here (fraction of height)
+min_clock_cover = 0.10   # subject must cover at least this much of the numerals' height...
+max_clock_cover = 0.35   # ...and at most this much, or iOS turns Depth Effect off
+min_area = 0.08          # subject share of the frame
+max_area = 0.65
+frag_band = 0.06         # band below the apex checked for broken outlines
+max_frag_pieces = 3
+max_thin_ratio = 0.35
+max_clock_bg_std = 0.20  # background behind the clock must be calm
+max_clock_bg_edges = 0.55
+
+[sources]
+shuffle_top = 6
+
+[sources.unsplash]
+# EarthPorn-style landscapes only (no people/animals/abstract). Depth Effect
+# needs a form that rises into the clock, so queries favour landscapes with
+# a clear focal peak / tree / stack. Results are relevance-ranked.
+queries = [
+  "mountain peak", "mountain landscape", "dolomites", "patagonia mountains",
+  "volcano landscape", "lone tree landscape", "sea stack", "rock formation desert",
+  "lighthouse cliff", "matterhorn", "fitz roy", "yosemite half dome",
+  "iceland mountain", "waterfall cliff", "canyon spire", "alpine lake mountain",
+]
+queries_per_run = 6      # rotated daily so the pool keeps changing
+pages = 2
+
+[sources.reddit]
+# Dormant unless REDDIT_CLIENT_ID/SECRET are approved keys: Reddit blocks
+# anonymous access and requires approval for new API apps since 2025-26.
+subreddits = ["EarthPorn", "SkyPorn", "WaterPorn", "AutumnPorn", "WinterPorn", "DesertPorn"]
+sort = "hot"
+limit = 50
