@@ -121,6 +121,15 @@ def main(argv=None) -> int:
         t_start = time.time()
         tried = [0]
 
+        def norm_title(t: str) -> str:
+            return re.sub(r"[^a-z]+", " ", (t or "").lower()).strip()[:40]
+
+        def redundant(c) -> bool:
+            """Max 2 picks per search feed, and no near-duplicate titles."""
+            same_feed = sum(1 for a in accepted if a["c"].source == c.source)
+            dup = c.title and any(norm_title(a["c"].title) == norm_title(c.title) for a in accepted)
+            return same_feed >= pool.get("max_per_feed", 2) or bool(dup)
+
         def kind_full(c) -> bool:
             n = sum(1 for a in accepted if a["c"].kind == c.kind)
             return n >= (space_cap if c.kind == fetchers.SPACE else land_cap)
@@ -173,14 +182,17 @@ def main(argv=None) -> int:
         for c in cands:
             if out_of_budget():
                 break
+            if redundant(c):
+                continue
             if kind_full(c):
                 deferred.append(c)
                 continue
             try_one(c)
-        for c in deferred:  # e.g. not enough space shots passed: let landscapes fill in
+        for c in deferred:  # e.g. not enough landscapes passed: let the other kind fill in
             if out_of_budget():
                 break
-            try_one(c)
+            if not redundant(c):
+                try_one(c)
         log.info("accepted %d/%d after %d tries in %.0fs", len(accepted), N, tried[0], time.time() - t_start)
         for p in consumed:  # inbox photos are tried once (used or rejected)
             p.unlink(missing_ok=True)

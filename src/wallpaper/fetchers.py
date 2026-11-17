@@ -239,6 +239,10 @@ def nasa(queries: list[str], cfg: dict) -> list[Candidate]:
             if not (nid.startswith("PIA") or nid.lower().startswith("iss")
                     or (nid.startswith("KSC") and "launch" in kw) or "artist" in kw):
                 continue
+            if any(w in kw for w in ("3-d", "3d ", "anaglyph", "stereo", "diagram", "chart", "graphic")):
+                continue
+            if "artist" in kw and not any(w in kw for w in ("planet", "exoplanet", "moon", "star", "galaxy", "nebula")):
+                continue  # artist's concepts of spacecraft crop badly; keep worlds and skies
             out.append(Candidate(
                 key=f"nasa:{nid}", source=f"nasa/{q}", kind=SPACE, width=0, height=0,
                 image_url=f"https://images-assets.nasa.gov/image/{nid}/{nid}~orig.jpg",

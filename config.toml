@@ -37,6 +37,7 @@ size = 8
 dark_luma = 0.36          # mean brightness (0 black .. 1 white) below this counts as "dark"
 min_dark_share = 0.75     # at least this share of the pool must be dark
 space_share = 0.30        # aim for this share of space imagery (rest landscapes)
+max_per_feed = 2          # at most this many picks from one search/category per night
 
 [sources]
 max_est_luma = 0.62       # drop photos whose source-reported average colour is brighter
