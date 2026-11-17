@@ -216,17 +216,27 @@ def main(argv=None) -> int:
         if not args.local:
             c.mark_used()
             history.append({"key": c.key, "date": today.isoformat(), "used": True})
-    old_dirs = sorted((p for p in layers.glob("*") if (p / "bg.jpg").exists()), key=lambda p: p.name)
+    def load_meta(od: Path) -> dict:
+        pj = od / "photo.json"
+        return json.loads(pj.read_text(encoding="utf-8")) if pj.exists() else {"key": od.name}
+
+    old_dirs = [p for p in layers.glob("*") if (p / "bg.jpg").exists()]
     if (layers / "bg.jpg").exists():  # pre-pool single-photo layout
         old_dirs.append(layers)
+    old_dirs.sort(key=lambda p: load_meta(p).get("luma", 0.5))  # top up with the darkest first
     have = {s["key"] for s in slots}
+    titles = {re.sub(r"[^a-z]+", " ", (s.get("title") or "").lower()).strip()[:40] for s in slots}
+    n_bright = sum(1 for s in slots if s.get("luma", 0) > dark_luma)
     for od in old_dirs:
         if len(slots) >= N:
             break
-        pj = od / "photo.json"
-        meta = json.loads(pj.read_text(encoding="utf-8")) if pj.exists() else {"key": od.name}
-        if meta.get("key") in have:
+        meta = load_meta(od)
+        t = re.sub(r"[^a-z]+", " ", (meta.get("title") or "").lower()).strip()[:40]
+        bright = meta.get("luma", 0) > dark_luma
+        if meta.get("key") in have or (t and t in titles) or (bright and n_bright >= max_bright):
             continue
+        n_bright += bright
+        titles.add(t)
         d = new_layers / f"{len(slots) + 1}"
         d.mkdir(parents=True)
         for f in ("bg.jpg", "fg.png", "photo.json"):

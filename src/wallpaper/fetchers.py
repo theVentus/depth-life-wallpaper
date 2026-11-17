@@ -239,7 +239,9 @@ def nasa(queries: list[str], cfg: dict) -> list[Candidate]:
             if not (nid.startswith("PIA") or nid.lower().startswith("iss")
                     or (nid.startswith("KSC") and "launch" in kw) or "artist" in kw):
                 continue
-            if any(w in kw for w in ("3-d", "3d ", "anaglyph", "stereo", "diagram", "chart", "graphic")):
+            if any(w in kw for w in ("3-d", "3d ", "anaglyph", "stereo", "diagram", "chart", "graphic", "test",
+                                     " lab", "laboratory", "clean room", "cleanroom", "assembly", "facility",
+                                     "hardware", "installed", "engineering", "mockup", "prototype")):
                 continue
             if "artist" in kw and not any(w in kw for w in ("planet", "exoplanet", "moon", "star", "galaxy", "nebula")):
                 continue  # artist's concepts of spacecraft crop badly; keep worlds and skies
