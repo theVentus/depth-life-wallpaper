@@ -2989,5 +2989,272 @@
   "key": "nasa:PIA04819",
   "date": "2026-11-17",
   "used": true
+ },
+ {
+  "key": "nasa:PIA18910",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:KSC-00pp0216",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "crop would run off the bottom"
+ },
+ {
+  "key": "nasa:PIA15629",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA17351",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA21430",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "nasa:PIA20895",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA13746",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "nasa:iss068e068975",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "subject too large (74%)"
+ },
+ {
+  "key": "nasa:iss066e116300",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:PIA12619",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA12210",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:iss071e378171",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "subject too small (3%)"
+ },
+ {
+  "key": "nasa:PIA09200",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA22963",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA17550",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "nasa:iss058e005282",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:PIA25020",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:KSC-2011-6875",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "subject too small (3%)"
+ },
+ {
+  "key": "nasa:PIA08349",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA16694",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA21892",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA12576",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA13081",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:KSC-2009-1972",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "subject too small (4%)"
+ },
+ {
+  "key": "nasa:PIA19598",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA24436",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:iss071e345427",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "nasa:iss063e074380",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "not enough room above the subject"
+ },
+ {
+  "key": "nasa:PIA22687",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA13405",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA21903",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA05983",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA12758",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:KSC-20250115-PH-FMX02_0001",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:KSC-20250115-PH-CSH01_0001",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:iss073e0982346",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:PIA06257",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA03048",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA24817",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA25725",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA17947",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA15502",
+  "date": "2026-11-17",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA24527",
+  "date": "2026-11-17",
+  "used": true
+ },
+ {
+  "key": "nasa:PIA18579",
+  "date": "2026-11-17",
+  "used": true
+ },
+ {
+  "key": "nasa:KSC-20180812-PH_AWG03_0012",
+  "date": "2026-11-17",
+  "used": true
  }
 ]
