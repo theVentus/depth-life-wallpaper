@@ -214,6 +214,16 @@ def wikimedia(categories: list[str], kind: str, cfg: dict, min_h: int, min_w: in
 
 
 # ------------------------------------------------------ NASA Image Library
+NASA_BAD = ("3-d", "3d ", "anaglyph", "stereo", "diagram", "chart", "graphic", "test", " lab", "laboratory",
+            "clean room", "cleanroom", "assembly", "facility", "hardware", "installed", "engineering",
+            "mockup", "prototype")
+
+
+def nasa_ok(text: str) -> bool:
+    t = f" {text.lower()} "
+    return not any(w in t for w in NASA_BAD)
+
+
 def nasa(queries: list[str], cfg: dict) -> list[Candidate]:
     """images.nasa.gov: real mission imagery and artist's concepts, no key.
     Sizes aren't in the search results; undersized ones fail the crop check."""
@@ -239,9 +249,7 @@ def nasa(queries: list[str], cfg: dict) -> list[Candidate]:
             if not (nid.startswith("PIA") or nid.lower().startswith("iss")
                     or (nid.startswith("KSC") and "launch" in kw) or "artist" in kw):
                 continue
-            if any(w in kw for w in ("3-d", "3d ", "anaglyph", "stereo", "diagram", "chart", "graphic", "test",
-                                     " lab", "laboratory", "clean room", "cleanroom", "assembly", "facility",
-                                     "hardware", "installed", "engineering", "mockup", "prototype")):
+            if not nasa_ok(kw):
                 continue
             if "artist" in kw and not any(w in kw for w in ("planet", "exoplanet", "moon", "star", "galaxy", "nebula")):
                 continue  # artist's concepts of spacecraft crop badly; keep worlds and skies

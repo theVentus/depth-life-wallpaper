@@ -233,8 +233,11 @@ def main(argv=None) -> int:
         meta = load_meta(od)
         t = re.sub(r"[^a-z]+", " ", (meta.get("title") or "").lower()).strip()[:40]
         bright = meta.get("luma", 0) > dark_luma
-        if meta.get("key") in have or (t and t in titles) or (bright and n_bright >= max_bright):
-            continue
+        kind = meta.get("kind") or fetchers.LANDSCAPE
+        title = meta.get("title") or ""
+        if (meta.get("key") in have or (t and t in titles) or (bright and n_bright >= max_bright)
+                or not fetchers._clean(title, kind) or not fetchers.nasa_ok(title)):
+            continue  # carried-over slots pass today's filters too
         n_bright += bright
         titles.add(t)
         d = new_layers / f"{len(slots) + 1}"
