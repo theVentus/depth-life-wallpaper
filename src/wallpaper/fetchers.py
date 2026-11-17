@@ -36,7 +36,10 @@ LANDSCAPE, SPACE = "landscape", "space"
 BANNED_COMMON = {"person", "people", "man", "men", "woman", "women", "girl", "boy", "child", "children",
                  "portrait", "portraits", "selfie", "couple", "hiker", "dog", "dogs", "cat", "cats", "bird",
                  "birds", "animal", "animals", "wildlife", "insect", "insects", "flower", "flowers", "macro",
-                 "food", "car", "interior", "silhouette of a"}
+                 "food", "car", "interior", "silhouette of a", "crowd", "crowds", "spectators", "guests",
+                 "visitors", "students", "employees", "team", "attendees", "workers", "engineers",
+                 "technicians", "astronaut", "astronauts", "crew", "patch", "logo", "ceremony", "event",
+                 "media", "press", "officials", "administrator", "family", "families", "public"}
 BANNED_LANDSCAPE = BANNED_COMMON | {"abstract", "illustration", "render", "art", "3d", "texture", "pattern"}
 
 
@@ -229,6 +232,12 @@ def nasa(queries: list[str], cfg: dict) -> list[Candidate]:
             nid = d.get("nasa_id")
             text = f"{d.get('title', '')} {' '.join(d.get('keywords', []) or [])} {(d.get('description') or '')[:300]}"
             if not nid or not _clean(text, SPACE):
+                continue
+            # The library is mostly press/event photos; keep the imagery feeds:
+            # JPL Photojournal (planets, artist's concepts), ISS Earth views, launches.
+            kw = text.lower()
+            if not (nid.startswith("PIA") or nid.lower().startswith("iss")
+                    or (nid.startswith("KSC") and "launch" in kw) or "artist" in kw):
                 continue
             out.append(Candidate(
                 key=f"nasa:{nid}", source=f"nasa/{q}", kind=SPACE, width=0, height=0,

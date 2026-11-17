@@ -61,11 +61,11 @@ wikimedia_categories = [
 # (planet, moon, rocket, station) rising into the clock.
 queries = [
   "planet earth from space", "moon surface", "space art planet", "saturn",
-  "rocket launch night", "planet render", "astronaut space", "eclipse",
+  "rocket launch night", "planet render", "nebula planet art", "eclipse",
 ]
 nasa_queries = [
   "artist concept exoplanet", "earthrise", "saturn cassini", "jupiter juno",
-  "moon apollo", "rocket launch night", "international space station earth",
+  "moon surface", "rocket launch night", "international space station earth",
   "artist concept planet", "mars rover landscape", "earth from orbit night",
 ]
 wikimedia_categories = ["Featured pictures of astronomy", "Featured pictures of the Moon", "Featured pictures of planets"]
