@@ -1,0 +1,107 @@
+{
+  "rendered": "2026-11-21T07:24:52+05:30",
+  "new_today": 0,
+  "pool_size": 8,
+  "photos": [
+    {
+      "key": "nasa:KSC-20190627-PH_JBS01_0244",
+      "source": "nasa/rocket launch night",
+      "kind": "space",
+      "page_url": "https://images.nasa.gov/details/KSC-20190627-PH_JBS01_0244",
+      "title": "Mobile Launcher Move to Pad",
+      "author": "NASA/Ben Smegelsky",
+      "author_url": "",
+      "date": "2026-11-17",
+      "luma": 0.061,
+      "metrics": {
+        "scale": 0.692,
+        "area": 0.278,
+        "apex": 0.225,
+        "frag_pieces": 1,
+        "thin_ratio": 0.011,
+        "clock_bg_std": 0.006,
+        "clock_bg_edges": 0.025
+      }
+    },
+    {
+      "key": "nasa:KSC-2009-5860",
+      "source": "nasa/rocket launch night",
+      "kind": "space",
+      "page_url": "https://images.nasa.gov/details/KSC-2009-5860",
+      "title": "KSC-2009-5860",
+      "author": "KSC",
+      "author_url": "",
+      "date": "2026-11-17",
+      "luma": 0.074,
+      "metrics": {
+        "scale": 1.148,
+        "area": 0.082,
+        "apex": 0.2249,
+        "frag_pieces": 2,
+        "thin_ratio": 0.175,
+        "clock_bg_std": 0.004,
+        "clock_bg_edges": 0.013
+      }
+    },
+    {
+      "key": "nasa:KSC-20180812-PH_AWG03_0006",
+      "source": "nasa/rocket launch night",
+      "kind": "space",
+      "page_url": "https://images.nasa.gov/details/KSC-20180812-PH_AWG03_0006",
+      "title": "Parker Solar Probe Liftoff",
+      "author": "NASA/Tony Gray and Tim Powers",
+      "author_url": "",
+      "date": "2026-11-17",
+      "luma": 0.185,
+      "metrics": {
+        "scale": 0.738,
+        "area": 0.139,
+        "apex": 0.225,
+        "frag_pieces": 3,
+        "thin_ratio": 0.144,
+        "clock_bg_std": 0.009,
+        "clock_bg_edges": 0.011
+      }
+    },
+    {
+      "key": "nasa:PIA07245",
+      "source": "nasa/artist concept planet",
+      "kind": "space",
+      "page_url": "https://images.nasa.gov/details/PIA07245",
+      "title": "Mars Reconnaissance Orbiter, Front View Artist Concept",
+      "author": "NASA/JPL",
+      "author_url": "",
+      "date": "2026-11-17",
+      "luma": 0.306,
+      "metrics": {
+        "scale": 0.963,
+        "area": 0.549,
+        "apex": 0.225,
+        "frag_pieces": 1,
+        "thin_ratio": 0.0,
+        "clock_bg_std": 0.01,
+        "clock_bg_edges": 0.045
+      }
+    },
+    {
+      "key": "wikimedia:39769820",
+      "source": "wikimedia/Featured pictures of coasts",
+      "kind": "landscape",
+      "page_url": "https://commons.wikimedia.org/wiki/File:2014_Baro%C3%B1a._Castro_de_Baro%C3%B1a._Porto_do_Son-2.jpg",
+      "title": "2014 Baro\u00f1a. Castro de Baro\u00f1a. Porto do Son-2",
+      "author": "Luis Miguel Bugallo S\u00e1nchez (Lmbuga)",
+      "author_url": "",
+      "date": "2026-11-17",
+      "luma": 0.581,
+      "metrics": {
+        "scale": 1.107,
+        "area": 0.251,
+        "apex": 0.225,
+        "frag_pieces": 2,
+        "thin_ratio": 0.086,
+        "clock_bg_std": 0.081,
+        "clock_bg_edges": 0.135
+      }
+    }
+  ]
+}

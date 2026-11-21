@@ -1,0 +1,20 @@
+{
+  "key": "nasa:KSC-2009-5860",
+  "source": "nasa/rocket launch night",
+  "kind": "space",
+  "page_url": "https://images.nasa.gov/details/KSC-2009-5860",
+  "title": "KSC-2009-5860",
+  "author": "KSC",
+  "author_url": "",
+  "date": "2026-11-17",
+  "luma": 0.074,
+  "metrics": {
+    "scale": 1.148,
+    "area": 0.082,
+    "apex": 0.2249,
+    "frag_pieces": 2,
+    "thin_ratio": 0.175,
+    "clock_bg_std": 0.004,
+    "clock_bg_edges": 0.013
+  }
+}

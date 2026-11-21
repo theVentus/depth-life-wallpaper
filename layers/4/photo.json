@@ -1,0 +1,20 @@
+{
+  "key": "nasa:PIA07245",
+  "source": "nasa/artist concept planet",
+  "kind": "space",
+  "page_url": "https://images.nasa.gov/details/PIA07245",
+  "title": "Mars Reconnaissance Orbiter, Front View Artist Concept",
+  "author": "NASA/JPL",
+  "author_url": "",
+  "date": "2026-11-17",
+  "luma": 0.306,
+  "metrics": {
+    "scale": 0.963,
+    "area": 0.549,
+    "apex": 0.225,
+    "frag_pieces": 1,
+    "thin_ratio": 0.0,
+    "clock_bg_std": 0.01,
+    "clock_bg_edges": 0.045
+  }
+}

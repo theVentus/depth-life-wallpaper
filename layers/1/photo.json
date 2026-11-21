@@ -1,0 +1,20 @@
+{
+  "key": "nasa:KSC-20190627-PH_JBS01_0244",
+  "source": "nasa/rocket launch night",
+  "kind": "space",
+  "page_url": "https://images.nasa.gov/details/KSC-20190627-PH_JBS01_0244",
+  "title": "Mobile Launcher Move to Pad",
+  "author": "NASA/Ben Smegelsky",
+  "author_url": "",
+  "date": "2026-11-17",
+  "luma": 0.061,
+  "metrics": {
+    "scale": 0.692,
+    "area": 0.278,
+    "apex": 0.225,
+    "frag_pieces": 1,
+    "thin_ratio": 0.011,
+    "clock_bg_std": 0.006,
+    "clock_bg_edges": 0.025
+  }
+}
