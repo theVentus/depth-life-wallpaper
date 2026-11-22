@@ -3256,5 +3256,76 @@
   "key": "nasa:KSC-20180812-PH_AWG03_0012",
   "date": "2026-11-17",
   "used": true
+ },
+ {
+  "key": "nasa:PIA09117",
+  "date": "2026-11-22",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA15259",
+  "date": "2026-11-22",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA12657",
+  "date": "2026-11-22",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA15257",
+  "date": "2026-11-22",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA11534",
+  "date": "2026-11-22",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA11642",
+  "date": "2026-11-22",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA12706",
+  "date": "2026-11-22",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA12704",
+  "date": "2026-11-22",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:PIA12589",
+  "date": "2026-11-22",
+  "used": false,
+  "reason": "too small"
+ },
+ {
+  "key": "nasa:iss071e462173",
+  "date": "2026-11-22",
+  "used": false,
+  "reason": "no clear subject"
+ },
+ {
+  "key": "nasa:iss071e439835",
+  "date": "2026-11-22",
+  "used": false,
+  "reason": "subject too small (0%)"
+ },
+ {
+  "key": "nasa:PIA22932",
+  "date": "2026-11-22",
+  "used": true
  }
 ]
