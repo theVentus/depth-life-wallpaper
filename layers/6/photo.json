@@ -1,0 +1,20 @@
+{
+  "key": "wikimedia:39769820",
+  "source": "wikimedia/Featured pictures of coasts",
+  "kind": "landscape",
+  "page_url": "https://commons.wikimedia.org/wiki/File:2014_Baro%C3%B1a._Castro_de_Baro%C3%B1a._Porto_do_Son-2.jpg",
+  "title": "2014 Baro\u00f1a. Castro de Baro\u00f1a. Porto do Son-2",
+  "author": "Luis Miguel Bugallo S\u00e1nchez (Lmbuga)",
+  "author_url": "",
+  "date": "2026-11-17",
+  "luma": 0.581,
+  "metrics": {
+    "scale": 1.107,
+    "area": 0.251,
+    "apex": 0.225,
+    "frag_pieces": 2,
+    "thin_ratio": 0.086,
+    "clock_bg_std": 0.081,
+    "clock_bg_edges": 0.135
+  }
+}
